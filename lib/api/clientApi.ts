@@ -1,7 +1,6 @@
+import { Note } from "@/types/note";
 import axios from "axios";
-import type { Note } from "../types/note";
-
-axios.defaults.baseURL = "https://notehub-api.goit.study";
+import { nextServer } from "./api";
 
 const myToken = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN
 
@@ -59,5 +58,3 @@ export const deleteNote = async(noteId: string)=>{
     });
     return res.data
 }
-
-
