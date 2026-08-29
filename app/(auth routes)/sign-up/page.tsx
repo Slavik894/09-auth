@@ -5,17 +5,20 @@ import css from './SignUpPage.module.css';
 import { useState } from 'react';
 import { register, RegisterRequest } from '@/lib/api/clientApi';
 import { ApiError } from '@/app/api/api';
+import { useAuthStore } from '@/lib/store/authStore';
 
 
 export default function SignUp(){
     const router = useRouter();
     const [error, setError] = useState('');
+    const setUser = useAuthStore((state) => state.setUser);
 
   const handleSubmit = async (formData: FormData) => {
     try {
       const formValues = Object.fromEntries(formData) as RegisterRequest;
       const res = await register(formValues);
       if (res) {
+        setUser(res)
         router.push('/profile');
       } else {
         setError('Invalid email or password');
