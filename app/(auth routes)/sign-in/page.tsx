@@ -14,11 +14,8 @@ export default function SignIn(){
 
   const handleSubmit = async (formData: FormData) => {
     try {
-	    // Типізуємо дані форми
       const formValues = Object.fromEntries(formData) as LoginRequest;
-      // Виконуємо запит
       const res = await login(formValues);
-      // Виконуємо редірект або відображаємо помилку
       if (res) {
          setUser(res)
         router.push('/profile');
