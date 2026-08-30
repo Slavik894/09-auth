@@ -13,7 +13,7 @@ export default function EditProfilePage(){
 
   useEffect(() => {
     getMe().then((user) => {
-      setUserName(user.userName ?? '');
+      setUserName(user.username ?? '');
     });
   }, []);
 
