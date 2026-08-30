@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 export default function EditProfilePage(){
   const [userName, setUserName] = useState('');
   const user = useAuthStore((state)=> state.user);
+  const setUser = useAuthStore((state)=> state.setUser);
   const router = useRouter();
 
   useEffect(() => {
@@ -23,6 +24,8 @@ export default function EditProfilePage(){
 
   const handleSaveUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const updatedUser = await updateMe({username: userName});
+    setUser(updatedUser);
     await updateMe({username: userName});
     router.push('/profile');
 

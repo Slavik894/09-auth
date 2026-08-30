@@ -23,8 +23,8 @@ export const fetchNotes = async (searchText: string, tag?: string, page?: number
     return res.data;
 };
 
-export const getSingleNote = async (id: string) => {
-    const res = await nextServer.get(`/notes/${id}`);
+export const getSingleNote = async (id: string):Promise<Note> => {
+    const res = await nextServer.get<Note>(`/notes/${id}`);
     return res.data;
 }
 
@@ -47,7 +47,7 @@ export const deleteNote = async(noteId: string)=>{
 export type RegisterRequest = {
   email: string;
   password: string;
-  userName: string;
+  username: string;
 };
 
 export const register = async (data: RegisterRequest) => {

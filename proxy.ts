@@ -1,10 +1,9 @@
-// proxy.ts
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkSession } from './lib/api/serverApi';
 import { parseSetCookie } from 'cookie';
 
-const publicRoutes = ['/sign-in', 'sign-up'];
+const publicRoutes = ['/sign-in', '/sign-up'];
 const privateRoutes = ['/profile', '/notes'];
 
 export async function proxy(request: NextRequest) {
@@ -19,7 +18,8 @@ export async function proxy(request: NextRequest) {
 
     if (!accessToken) {
       if (refreshToken) {
-        const data = await checkSession();
+        try{
+           const data = await checkSession();
         const setCookie = data.headers["set-cookie"];
 
         if (setCookie) {
@@ -30,7 +30,7 @@ export async function proxy(request: NextRequest) {
             if (parsed.value) {
 		      cookieStore.set(parsed.name, parsed.value, parsed);
 			}
-          }
+    }
           if (isPublicRoute) {
           return NextResponse.redirect(new URL('/', request.url), {
             headers: {
@@ -38,7 +38,6 @@ export async function proxy(request: NextRequest) {
             },
           });
         }
-        // для приватного маршруту — дозволяємо доступ
         if (isPrivateRoute) {
           return NextResponse.next({
             headers: {
@@ -48,29 +47,33 @@ export async function proxy(request: NextRequest) {
         }
       }
     }
+           catch{
+if(isPrivateRoute){
+  return NextResponse.redirect(new URL('/sign-in', request.url));
+}
+}
+      }
+    
 
     if (isPublicRoute) {
       return NextResponse.next();
     }
 
-    // приватний маршрут — редірект на сторінку входу
     if (isPrivateRoute) {
       return NextResponse.redirect(new URL('/sign-in', request.url));
     }
   }
+  
 
-  // Якщо accessToken існує:
-  // публічний маршрут — виконуємо редірект на головну
   if (isPublicRoute) {
     return NextResponse.redirect(new URL('/', request.url));
   }
-  // приватний маршрут — дозволяємо доступ
   if (isPrivateRoute) {
     return NextResponse.next();
   }
 }
 
-
 export const config = {
     matcher:['/profile/:path*', '/notes/:path*', '/sign-in', '/sign-up'],
 };
+      
