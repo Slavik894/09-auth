@@ -4,7 +4,7 @@ import css from './EditProfilePage.module.css'
 import { useEffect, useState } from 'react';
 import { getMe, updateMe } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function EditProfilePage(){
   const [userName, setUserName] = useState('');
