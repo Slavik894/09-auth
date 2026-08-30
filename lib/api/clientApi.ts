@@ -92,10 +92,10 @@ export const getMe = async () => {
 };
 
 export type UpdateUserRequest = {
-  userName?: string;
+  username: string;
 };
 
-export const updateMe = async (payload: UpdateUserRequest) => {
-  const res = await nextServer.put<User>('/users/me', payload);
+export const updateMe = async (payload: UpdateUserRequest): Promise<User> => {
+  const res = await nextServer.patch<User>('/users/me', payload);
   return res.data;
 };
