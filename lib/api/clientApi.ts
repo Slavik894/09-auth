@@ -1,7 +1,7 @@
 import { Note } from "@/types/note";
 import { nextServer } from "./api";
 
-const myToken = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN
+
 
 export interface NotesHttpResponse{
     notes: Note[];
@@ -17,20 +17,13 @@ export const fetchNotes = async (searchText: string, tag?: string, page?: number
             perPage: 12,
             search: searchText,
             tag: tag,
-        },
-        headers:{
-            Authorization: `Bearer ${myToken}`
         }
     });
     return res.data;
 };
 
 export const getSingleNote = async (id: string) => {
-    const res = await nextServer.get(`/notes/${id}`,{
-      headers:{
-            Authorization: `Bearer ${myToken}`
-        }
-    });
+    const res = await nextServer.get(`/notes/${id}`);
     return res.data;
 }
 
@@ -41,20 +34,12 @@ export interface NewNote{
 }
 
 export const createNote = async(newNote: NewNote) =>{
-    const res = await nextServer.post<Note>("/notes", newNote, {
-      headers:{
-            Authorization: `Bearer ${myToken}`
-        }
-    });
+    const res = await nextServer.post<Note>("/notes", newNote);
     return res.data;
 }
 
 export const deleteNote = async(noteId: string)=>{
-    const res = await nextServer.delete<Note>(`/notes/${noteId}`, {
-      headers:{
-            Authorization: `Bearer ${myToken}`
-        }
-    });
+    const res = await nextServer.delete<Note>(`/notes/${noteId}`);
     return res.data
 }
 
@@ -102,6 +87,15 @@ export const checkSession = async () => {
 };
 
 export const getMe = async () => {
-  const { data } = await nextServer.get<User>('/auth/me');
+  const { data } = await nextServer.get<User>('/users/me');
   return data;
+};
+
+export type UpdateUserRequest = {
+  userName?: string;
+};
+
+export const updateMe = async (payload: UpdateUserRequest) => {
+  const res = await nextServer.put<User>('/users/me', payload);
+  return res.data;
 };
